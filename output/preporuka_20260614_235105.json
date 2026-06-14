@@ -1,0 +1,11 @@
+{
+    "timestamp": "2026-06-14T23:51:05.190087",
+    "patient": {
+        "name": "Hristina Marjanovic",
+        "age": "22",
+        "location": "Beograd",
+        "symptoms": "glavobolja, bol u oku"
+    },
+    "recommendation": "PREPORUCENA SPECIJALNOST:\nNeurologija\n\nPREPORUCENI LEKAR:\nDr. Marko Nikolić (neurologija, Beograd, ocena: N/A, termini: )\n\nRAZLOG PREPORUKE:\nGlavobolja i bol u oku su simptomi koji se često pojavljaju kod neurološke anomalije ili neuropsihijije. Da bi se izbegao potencijalno komplikovanje, preporučujem da se Hristina Marjanović setne sa Dr. Markom Nikolićem, specijalistom za neurologiju.\n\nDOSTUPNI TERMINI:\nPonuda lekara je uvek mnenja i potrebno je pripremiti priliku za pregled. Molim Hristinu da kontaktira Dr. Nikolićju direktno ili putem our platforme da se setne za prilike.\n\nSAVETI ZA PRIPREMU:\n1. Proverite da li su sve vaše simptome i potencijalno uzrokovane organizma ili nešto drugo, kao što je moguće prije nego što se setete za pregled.\n2. Pocajte pregled sviđajući vreme i datum.\n3. Potrebna je detaljna informacija o vašim simptomima kako biste dobili precizniju preporuku ili podršku.",
+    "status": "success"
+}
