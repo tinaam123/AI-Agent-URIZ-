@@ -1,0 +1,43 @@
+{
+  "doctors": [
+    {
+      "id": 1,
+      "name": "Dr. Ana Petrović",
+      "specialty": "kardiologija",
+      "location": "Beograd",
+      "available_slots": ["09:00", "10:00", "14:00"],
+      "rating": 4.8
+    },
+    {
+      "id": 2,
+      "name": "Dr. Marko Nikolić",
+      "specialty": "neurologija",
+      "location": "Beograd",
+      "assigned_symptoms": ["glavobolja", "vrtoglavica", "nesanica"]
+    },
+    {
+      "id": 3,
+      "name": "Dr. Jelena Stanković",
+      "specialty": "opšta praksa",
+      "location": "Novi Sad",
+      "available_slots": ["08:00", "11:00", "15:00"],
+      "rating": 4.5
+    },
+    {
+      "id": 4,
+      "name": "Dr. Stefan Đorđević",
+      "specialty": "dermatologija",
+      "location": "Beograd",
+      "available_slots": ["10:00", "13:00", "16:00"],
+      "rating": 4.7
+    },
+    {
+      "id": 5,
+      "name": "Dr. Milica Jovanović",
+      "specialty": "pulmologija",
+      "location": "Niš",
+      "available_slots": ["09:00", "12:00", "15:00"],
+      "rating": 4.6
+    }
+  ]
+}

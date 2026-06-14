@@ -1,5 +1,12 @@
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage
+from agent.data_loader import load_doctors, get_specialty_info, find_doctors_by_specialty
+from prompts.system_prompt import SYSTEM_PROMPT, URGENCY_PROMPT, USER_PROMPT_TEMPLATE
+
+URGENT_SYMPTOMS = [
+    "bol u grudima", "otežano disanje", "gubitak svesti",
+    "paraliza", "jak bol u stomaku"
+]
 
 def create_llm():
     return ChatOllama(
@@ -7,21 +14,46 @@ def create_llm():
         temperature=0.7
     )
 
+def check_urgency(symptoms: str) -> bool:
+    """Proverava da li simptomi ukazuju na hitno stanje"""
+    symptoms_lower = symptoms.lower()
+    return any(symptom in symptoms_lower for symptom in URGENT_SYMPTOMS)
+
 def analyze_appointment(patient_data: dict) -> str:
     llm = create_llm()
     
+    if check_urgency(patient_data['symptoms']):
+        return URGENCY_PROMPT
+    
+    doctors = load_doctors()
+    doctors_info = "\n".join([
+        f"- {d['name']} ({d['specialty']}, {d['location']}, ocena: {d.get('rating', 'N/A')}, termini: {', '.join(d.get('available_slots', []))})"
+        for d in doctors
+    ])
+    
+    specialty_info = get_specialty_info(patient_data['symptoms'])
+    
+    user_prompt = USER_PROMPT_TEMPLATE.format(
+        name=patient_data['name'],
+        age=patient_data['age'],
+        symptoms=patient_data['symptoms'],
+        location=patient_data['location'],
+        doctors_info=doctors_info,
+        specialty_info=specialty_info
+    )
+    
     messages = [
-        SystemMessage(content="""Ti si medicinski asistent na platformi za zakazivanje pregleda. 
-        Pomažeš pacijentima da pronađu pravog lekara i zakažu pregled na osnovu njihovih simptoma."""),
-        HumanMessage(content=f"""
-        Pacijent ima sledeće informacije:
-        - Ime: {patient_data['name']}
-        - Simptomi: {patient_data['symptoms']}
-        - Starost: {patient_data['age']}
-        
-        Preporuči odgovarajuću specijalnost lekara i savete za pripremu pregleda.
-        """)
+        SystemMessage(content=SYSTEM_PROMPT),
+        HumanMessage(content=user_prompt)
     ]
     
     response = llm.invoke(messages)
     return response.content
+
+def get_doctor_info(specialty: str) -> dict:
+    wiki_info = get_specialty_info(specialty)
+    available_doctors = find_doctors_by_specialty(specialty)
+    return {
+        "specialty_info": wiki_info,
+        "available_doctors": available_doctors
+    }
