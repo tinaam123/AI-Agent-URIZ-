@@ -171,3 +171,4 @@ Hvala na koriscenju MediAssist platforme. Dovidjenja!
 
 - **Wikipedia REST API** – dohvatanje informacija o medicinskim specijalnostima
 - **doctors.json** – lokalna baza podataka lekara sa dostupnim terminima
+## SCRUM-12 Registracija korisnika
