@@ -40,3 +40,33 @@ def find_doctors_by_specialty(specialty: str) -> list:
         doc for doc in doctors
         if specialty.lower() in doc['specialty'].lower()
     ]
+
+SYMPTOM_SPECIALTY_MAP = {
+    "glavobolja": "neurologija",
+    "vrtoglavica": "neurologija",
+    "nesanica": "neurologija",
+    "trnjenje": "neurologija",
+    "bol u grudima": "kardiologija",
+    "lupanje srca": "kardiologija",
+    "visok pritisak": "kardiologija",
+    "otezano disanje": "pulmologija",
+    "kasalj": "pulmologija",
+    "gusenje": "pulmologija",
+    "osip": "dermatologija",
+    "svrab": "dermatologija",
+    "akne": "dermatologija",
+    "promena na kozi": "dermatologija",
+    "stomacni bol": "opšta praksa",
+    "temperatura": "opšta praksa",
+    "umor": "opšta praksa"
+}
+
+def suggest_specialty(symptoms: str) -> str:
+    """Mapira simptome na odgovarajucu specijalnost na osnovu kljucnih reci"""
+    symptoms_lower = symptoms.lower()
+    
+    for keyword, specialty in SYMPTOM_SPECIALTY_MAP.items():
+        if keyword in symptoms_lower:
+            return specialty
+    
+    return "opšta praksa"

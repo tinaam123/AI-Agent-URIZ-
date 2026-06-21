@@ -1,6 +1,6 @@
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage
-from agent.data_loader import load_doctors, get_specialty_info, find_doctors_by_specialty
+from agent.data_loader import load_doctors, get_specialty_info, find_doctors_by_specialty, suggest_specialty
 from prompts.system_prompt import SYSTEM_PROMPT, URGENCY_PROMPT, USER_PROMPT_TEMPLATE
 
 URGENT_SYMPTOMS = [
@@ -21,18 +21,22 @@ def check_urgency(symptoms: str) -> bool:
 
 def analyze_appointment(patient_data: dict) -> str:
     llm = create_llm()
-    
+
     if check_urgency(patient_data['symptoms']):
         return URGENCY_PROMPT
+
+    suggested_specialty = suggest_specialty(patient_data['symptoms'])
     
     doctors = load_doctors()
+    matching_doctors = find_doctors_by_specialty(suggested_specialty)
+    
     doctors_info = "\n".join([
         f"- {d['name']} ({d['specialty']}, {d['location']}, ocena: {d.get('rating', 'N/A')}, termini: {', '.join(d.get('available_slots', []))})"
-        for d in doctors
-    ])
-    
-    specialty_info = get_specialty_info(patient_data['symptoms'])
-    
+        for d in matching_doctors
+    ]) if matching_doctors else "Trenutno nema dostupnih lekara ove specijalnosti."
+
+    specialty_info = get_specialty_info(suggested_specialty)
+
     user_prompt = USER_PROMPT_TEMPLATE.format(
         name=patient_data['name'],
         age=patient_data['age'],
@@ -41,12 +45,12 @@ def analyze_appointment(patient_data: dict) -> str:
         doctors_info=doctors_info,
         specialty_info=specialty_info
     )
-    
+
     messages = [
-        SystemMessage(content=SYSTEM_PROMPT),
+        SystemMessage(content=SYSTEM_PROMPT + f"\n\nNa osnovu analize simptoma, preporucena specijalnost je: {suggested_specialty}. Koristi ovu specijalnost u svom odgovoru."),
         HumanMessage(content=user_prompt)
     ]
-    
+
     response = llm.invoke(messages)
     return response.content
 
